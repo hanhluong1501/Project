@@ -1,6 +1,8 @@
 import { useTheme } from "@mui/material/styles";
 import {
+  CartesianGrid,
   Label,
+  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -8,21 +10,22 @@ import {
   YAxis,
 } from "recharts";
 // import Title from "../Title/Title";
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import Title from "components/admin/Dashboard/Title/Title";
 import Loading from "components/common/Loading/Loading";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getOrders } from "server/firebase/firestore/orders";
 import { showErrorToast } from "utils/showToasts";
+import {
+  convertDateToString,
+  formatYAxisTick,
+  isDateLessThanOrEqual,
+  subtractDays,
+} from "utils/time";
 
 // Modify createData to use actual date with rounded hours
 function createDataWithDate(date, amount) {
-  const roundedHours = Math.round(date.getMinutes() / 60);
-  const roundedDate = new Date(date);
-  roundedDate.setMinutes(60 * roundedHours, 0, 0);
-
-  // Format the time to HH:00
-  const time = `${String(roundedDate.getHours()).padStart(2, "0")}:00`;
+  const time = convertDateToString(new Date(date), true);
   return { time, amount };
 }
 
@@ -30,6 +33,7 @@ export default function Week() {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -46,19 +50,26 @@ export default function Week() {
     fetchOrders();
   }, []);
 
-  // Filter orders for the latest 7 days
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6); // 6 days ago to cover the last 7 days
+  const lastSevenDay = useMemo(() => {
+    return subtractDays(selectedDate, 6);
+  }, [selectedDate]);
 
-  const lastSevenDaysOrders = orders.filter((order) => {
-    const orderDate = order.orderDate?.toDate();
-    return orderDate >= sevenDaysAgo;
-  });
+  const lastSevenDayOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const orderDate = order.orderDate?.toDate();
+      return (
+        orderDate >= lastSevenDay &&
+        isDateLessThanOrEqual(orderDate, selectedDate)
+      );
+    });
+  }, [lastSevenDay, orders, selectedDate]);
 
   // Generate data for the chart
-  const chartData = lastSevenDaysOrders.map((order) =>
-    createDataWithDate(order.orderDate.toDate(), order.totalPrice)
-  );
+  const chartData = useMemo(() => {
+    return lastSevenDayOrders.map((order) =>
+      createDataWithDate(order.orderDate.toDate(), order.totalPrice)
+    );
+  }, [lastSevenDayOrders]);
 
   return (
     <>
@@ -66,6 +77,30 @@ export default function Week() {
       <Box ml={4} mb={2}>
         <Title>Doanh thu trong 7 ngày qua</Title>
       </Box>
+      <Box ml={4} mb={1}>
+        <h3>
+          {`Lọc theo ngày (từ ngày ${convertDateToString(
+            lastSevenDay,
+            true
+          )} đến 
+          ${convertDateToString(selectedDate, true)})`}
+        </h3>
+      </Box>
+      <input
+        type="date"
+        className="is-hover"
+        value={convertDateToString(selectedDate)}
+        style={{
+          marginLeft: "32px",
+          marginBottom: "16px",
+          padding: "6px",
+          borderRadius: "8px",
+          borderColor: "#BEBEBE",
+          borderWidth: "1px",
+          borderStyle: "solid",
+        }}
+        onChange={(e) => setSelectedDate(new Date(e.target.value))}
+      />
       <ResponsiveContainer
         width="70%"
         height="70%"
@@ -73,47 +108,54 @@ export default function Week() {
           marginInline: "auto",
         }}
       >
-        <LineChart
-          data={chartData}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
-        >
-          <XAxis
-            dataKey="time"
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-            domain={["auto", "auto"]}
-          />
-          <YAxis
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-            domain={["auto", "auto"]}
+        {chartData.length === 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
           >
-            <Label
-              angle={270}
-              position="left"
-              offset={15}
-              style={{
-                textAnchor: "middle",
-                fill: theme.palette.text.primary,
-                ...theme.typography.body1,
-              }}
-            >
-              Doanh số (đ)
-            </Label>
-          </YAxis>
-          <Line
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="amount"
-            stroke={theme.palette.primary.main}
-            dot={false}
-          />
-        </LineChart>
+            <p>Không có dữ liệu</p>
+          </Box>
+        ) : (
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 16,
+              right: 16,
+              bottom: 0,
+              left: 24,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="time" domain={["auto", "auto"]} />
+            <YAxis domain={["auto", "auto"]} tickFormatter={formatYAxisTick}>
+              <Label
+                angle={270}
+                position="left"
+                offset={15}
+                style={{
+                  textAnchor: "middle",
+                  fill: theme.palette.text.primary,
+                  ...theme.typography.body1,
+                }}
+              >
+                Doanh số (đ)
+              </Label>
+            </YAxis>
+            <Tooltip />
+            <Legend />
+            <Line
+              isAnimationActive={false}
+              type="monotone"
+              dataKey="amount"
+              stroke={theme.palette.primary.main}
+              dot={false}
+            />
+          </LineChart>
+        )}
       </ResponsiveContainer>
     </>
   );

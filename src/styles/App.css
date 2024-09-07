@@ -24,3 +24,7 @@ a:hover {
 a:active {
   color: var(--primary, #a10550);
 }
+
+.is-hover:hover {
+  border-color: #1976d2 !important;
+}

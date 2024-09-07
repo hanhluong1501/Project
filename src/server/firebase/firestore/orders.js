@@ -23,7 +23,6 @@ export const getOrders = async () => {
     ordersSnapshot.forEach((doc) => {
       allOrders.push({ ...doc.data(), id: doc.id });
     });
-
     return allOrders;
   } catch (err) {
     throw err;
@@ -38,7 +37,7 @@ export const createOrder = async (
   phone,
   items,
   totalPrice,
-  address,
+  address
 ) => {
   try {
     const orderRef = await addDoc(ordersCollectionRef, {

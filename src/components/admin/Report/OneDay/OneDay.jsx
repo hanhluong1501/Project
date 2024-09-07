@@ -1,6 +1,8 @@
 import { useTheme } from "@mui/material/styles";
 import {
+  CartesianGrid,
   Label,
+  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -8,12 +10,13 @@ import {
   YAxis,
 } from "recharts";
 // import Title from "../Title/Title";
-import { Box } from "@mui/material";
+import { Box, Select, Tooltip, Input } from "@mui/material";
 import Title from "components/admin/Dashboard/Title/Title";
 import Loading from "components/common/Loading/Loading";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getOrders } from "server/firebase/firestore/orders";
 import { showErrorToast } from "utils/showToasts";
+import { convertDateToString, formatYAxisTick, subtractDays } from "utils/time";
 
 // Modify createData to use actual date with rounded hours
 function createDataWithDate(date, amount) {
@@ -30,6 +33,7 @@ export default function OneDay() {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -47,19 +51,24 @@ export default function OneDay() {
   }, []);
 
   // Set the start time for the last 24 hours
-  const lastOneDay = new Date();
-  lastOneDay.setDate(lastOneDay.getDate() - 1);
+  const lastOneDay = useMemo(() => {
+    return subtractDays(selectedDate, 1);
+  }, [selectedDate]);
 
   // Filter orders for the last 24 hours
-  const lastOneDayOrders = orders.filter((order) => {
-    const orderDate = order.orderDate?.toDate();
-    return orderDate >= lastOneDay;
-  });
+  const lastOneDayOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const orderDate = order.orderDate?.toDate();
+      return orderDate >= lastOneDay;
+    });
+  }, [lastOneDay, orders]);
 
   // Generate data for the chart
-  const chartData = lastOneDayOrders.map((order) =>
-    createDataWithDate(order.orderDate.toDate(), order.totalPrice)
-  );
+  const chartData = useMemo(() => {
+    return lastOneDayOrders.map((order) =>
+      createDataWithDate(order.orderDate.toDate(), order.totalPrice)
+    );
+  }, [lastOneDayOrders]);
 
   return (
     <>
@@ -67,6 +76,24 @@ export default function OneDay() {
       <Box ml={4} mb={2}>
         <Title>Doanh thu trong 1 ngày qua</Title>
       </Box>
+      <Box ml={4} mb={1}>
+        <h3>Lọc theo ngày</h3>
+      </Box>
+      <input
+        type="date"
+        className="is-hover"
+        value={convertDateToString(selectedDate)}
+        style={{
+          marginLeft: "32px",
+          marginBottom: "16px",
+          padding: "6px",
+          borderRadius: "8px",
+          borderColor: "#BEBEBE",
+          borderWidth: "1px",
+          borderStyle: "solid",
+        }}
+        onChange={(e) => setSelectedDate(new Date(e.target.value))}
+      />
       <ResponsiveContainer
         width="70%"
         height="70%"
@@ -74,47 +101,54 @@ export default function OneDay() {
           marginInline: "auto",
         }}
       >
-        <LineChart
-          data={chartData}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
-        >
-          <XAxis
-            dataKey="time"
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-            domain={["auto", "auto"]}
-          />
-          <YAxis
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-            domain={["auto", "auto"]}
+        {chartData.length === 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
           >
-            <Label
-              angle={270}
-              position="left"
-              offset={15}
-              style={{
-                textAnchor: "middle",
-                fill: theme.palette.text.primary,
-                ...theme.typography.body1,
-              }}
-            >
-              Doanh số (đ)
-            </Label>
-          </YAxis>
-          <Line
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="amount"
-            stroke={theme.palette.primary.main}
-            dot={false}
-          />
-        </LineChart>
+            <p>Không có dữ liệu</p>
+          </Box>
+        ) : (
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 16,
+              right: 16,
+              bottom: 0,
+              left: 24,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="time" domain={["auto", "auto"]} />
+            <YAxis domain={["auto", "auto"]} tickFormatter={formatYAxisTick}>
+              <Label
+                angle={270}
+                position="left"
+                offset={15}
+                style={{
+                  textAnchor: "middle",
+                  fill: theme.palette.text.primary,
+                  ...theme.typography.body1,
+                }}
+              >
+                Doanh số (đ)
+              </Label>
+            </YAxis>
+            <Tooltip />
+            <Legend />
+            <Line
+              isAnimationActive={false}
+              type="monotone"
+              dataKey="amount"
+              stroke={theme.palette.primary.main}
+              dot={false}
+            />
+          </LineChart>
+        )}
       </ResponsiveContainer>
     </>
   );
