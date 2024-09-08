@@ -9,32 +9,39 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { Link } from "react-router-dom";
+import ActiveTab from "./ActiveTab";
 
 export const mainListItems = (
   <>
     <Link to="/admin/dashboard">
-      <ListItemButton>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItemButton>
+      <ActiveTab linkTab="/admin/dashboard">
+        <ListItemButton>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
+      </ActiveTab>
     </Link>
     <Link to="/admin/products">
-      <ListItemButton>
-        <ListItemIcon>
-          <CategoryIcon />
-        </ListItemIcon>
-        <ListItemText primary="Sản phẩm" />
-      </ListItemButton>
+      <ActiveTab linkTab="/admin/products">
+        <ListItemButton>
+          <ListItemIcon>
+            <CategoryIcon />
+          </ListItemIcon>
+          <ListItemText primary="Sản phẩm" />
+        </ListItemButton>
+      </ActiveTab>
     </Link>
     <Link to="/admin/orders">
-      <ListItemButton>
-        <ListItemIcon>
-          <ShoppingCartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Đơn hàng" />
-      </ListItemButton>
+      <ActiveTab linkTab="/admin/orders">
+        <ListItemButton>
+          <ListItemIcon>
+            <ShoppingCartIcon />
+          </ListItemIcon>
+          <ListItemText primary="Đơn hàng" />
+        </ListItemButton>
+      </ActiveTab>
     </Link>
     {/* <Link to="/admin/customers">
       <ListItemButton>
@@ -61,28 +68,34 @@ export const secondaryListItems = (
       Thống kê
     </ListSubheader>
     <Link to="/admin/reports/1-day">
-      <ListItemButton>
-        <ListItemIcon>
-          <AssignmentIcon />
-        </ListItemIcon>
-        <ListItemText primary="Trong ngày" />
-      </ListItemButton>
+      <ActiveTab linkTab="/admin/reports/1-day">
+        <ListItemButton>
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Trong ngày" />
+        </ListItemButton>
+      </ActiveTab>
     </Link>
     <Link to="/admin/reports/7-days">
-      <ListItemButton>
-        <ListItemIcon>
-          <AssignmentIcon />
-        </ListItemIcon>
-        <ListItemText primary="7 ngày qua" />
-      </ListItemButton>
+      <ActiveTab linkTab="/admin/reports/7-days">
+        <ListItemButton>
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="7 ngày qua" />
+        </ListItemButton>
+      </ActiveTab>
     </Link>
     <Link to="/admin/reports/30-days">
-      <ListItemButton>
-        <ListItemIcon>
-          <AssignmentIcon />
-        </ListItemIcon>
-        <ListItemText primary="30 ngày qua" />
-      </ListItemButton>
+      <ActiveTab linkTab="/admin/reports/30-days">
+        <ListItemButton>
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="30 ngày qua" />
+        </ListItemButton>
+      </ActiveTab>
     </Link>
   </>
 );

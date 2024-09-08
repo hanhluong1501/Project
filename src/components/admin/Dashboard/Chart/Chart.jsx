@@ -47,7 +47,7 @@ export default function Chart({ orders }) {
             top: 16,
             right: 16,
             bottom: 0,
-            left: 24,
+            left: 44,
           }}
         >
           <XAxis
@@ -64,7 +64,7 @@ export default function Chart({ orders }) {
             <Label
               angle={270}
               position="left"
-              offset={15}
+              offset={35}
               style={{
                 textAnchor: "middle",
                 fill: theme.palette.text.primary,

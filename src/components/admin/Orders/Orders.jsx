@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Grid,
+  Input,
   MenuItem,
   Paper,
   Select,
@@ -16,6 +17,7 @@ import {
 } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import Loading from "components/common/Loading/Loading";
+import useDebounce from "hooks/useDebounce";
 import { useEffect, useState } from "react";
 import { getOrders, updateOrderStatus } from "server/firebase/firestore/orders";
 import { formattedPrice } from "utils/formattedPrice";
@@ -30,22 +32,41 @@ function Orders() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [filterStatus, setFilterStatus] = useState("All");
+  const [searchName, setSearchName] = useState("");
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const allOrders = await getOrders();
+      setOrders(allOrders);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      showErrorToast(e.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        const allOrders = await getOrders();
-        setOrders(allOrders);
-        setLoading(false);
-      } catch (e) {
-        setLoading(false);
-        showErrorToast(e.message);
-      }
-    };
-
     fetchOrders();
   }, []);
+
+  const onSearch = (e) => {
+    const name = e.target.value;
+    setSearchName(name);
+    setPage(0);
+    onSearchDebounceName(name);
+  };
+
+  const onSearchDebounceName = useDebounce((name) => {
+    if (!name) {
+      fetchOrders();
+      return;
+    }
+    const filteredOrders = orders.filter((order) =>
+      order.fullName.toLowerCase().includes(name.toLowerCase())
+    );
+    setOrders(filteredOrders);
+  }, 300);
 
   const filteredOrders =
     filterStatus === "All"
@@ -119,6 +140,12 @@ function Orders() {
         <Box
           sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
         >
+          <Input
+            placeholder="Tìm kiếm theo tên khách hàng"
+            sx={{ marginLeft: "16px", minWidth: "250px" }}
+            value={searchName}
+            onChange={onSearch}
+          />
           <Typography variant="subtitle1" sx={{ marginInline: 3 }}>
             Lọc theo trạng thái đơn hàng:
           </Typography>

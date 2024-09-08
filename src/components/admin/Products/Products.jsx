@@ -5,7 +5,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { MenuItem, Select, Typography } from "@mui/material";
+import { Input, MenuItem, Select, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -29,6 +29,7 @@ import { CATEGORY, CATEGORY_REVERT, TYPE_REVERT } from "utils/constants";
 import { formattedPrice } from "utils/formattedPrice";
 import { showErrorToast, showSuccessToast } from "utils/showToasts";
 import ProductFormDialog from "./ProductFormDialog/ProductFormDialog";
+import useDebounce from "hooks/useDebounce";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -108,22 +109,41 @@ export default function Products() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [filterCategory, setFilterCategory] = useState("All");
+  const [searchName, setSearchName] = useState("");
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const allProducts = await getProducts();
+      setProducts(allProducts);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      showErrorToast(e.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const allProducts = await getProducts();
-        setProducts(allProducts);
-        setLoading(false);
-      } catch (e) {
-        setLoading(false);
-        showErrorToast(e.message);
-      }
-    };
-
     fetchProducts();
   }, []);
+
+  const onSearch = (e) => {
+    const name = e.target.value;
+    setSearchName(name);
+    setPage(0);
+    onSearchDebounceName(name);
+  };
+
+  const onSearchDebounceName = useDebounce((name) => {
+    if (!name) {
+      fetchProducts();
+      return;
+    }
+    const productsFilter = products.filter((product) =>
+      product.name.toLowerCase().includes(name.toLowerCase())
+    );
+    setProducts(productsFilter);
+  }, 300);
 
   const filteredProducts =
     filterCategory === "All"
@@ -190,6 +210,12 @@ export default function Products() {
         <Box
           sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
         >
+          <Input
+            placeholder="Tìm kiếm theo tên sản phẩm"
+            sx={{ marginLeft: "16px", minWidth: "250px" }}
+            value={searchName}
+            onChange={onSearch}
+          />
           <Button
             onClick={handleClickAddProduct}
             startIcon={<AddIcon />}
