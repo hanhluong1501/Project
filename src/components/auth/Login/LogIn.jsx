@@ -77,7 +77,7 @@ export default function Login() {
       setToastOpen(true);
     } catch (error) {
       setLoading(false);
-      setToastMessage(error.message);
+      setToastMessage("Password is incorrect");
       setToastSeverity("error");
       setToastOpen(true);
     }
