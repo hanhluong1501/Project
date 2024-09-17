@@ -8,6 +8,7 @@ import {
   YAxis,
 } from "recharts";
 import Title from "../Title/Title";
+import { formatYAxisTick } from "utils/time";
 
 // Modify createData to use actual date with rounded hours
 function createDataWithDate(date, amount) {
@@ -47,7 +48,7 @@ export default function Chart({ orders }) {
             top: 16,
             right: 16,
             bottom: 0,
-            left: 44,
+            left: 64,
           }}
         >
           <XAxis
@@ -60,6 +61,7 @@ export default function Chart({ orders }) {
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
             domain={["auto", "auto"]}
+            tickFormatter={formatYAxisTick}
           >
             <Label
               angle={270}

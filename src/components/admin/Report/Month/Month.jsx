@@ -126,7 +126,7 @@ export default function Month() {
               top: 16,
               right: 16,
               bottom: 0,
-              left: 24,
+              left: 124,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -135,7 +135,7 @@ export default function Month() {
               <Label
                 angle={270}
                 position="left"
-                offset={15}
+                offset={55}
                 style={{
                   textAnchor: "middle",
                   fill: theme.palette.text.primary,
