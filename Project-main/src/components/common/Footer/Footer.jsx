@@ -64,7 +64,7 @@ const middleSection = {
 };
 
 const rightSection = {
-  title: "Đăng ký nhận thông thin",
+  title: "Đăng ký nhận thông tin",
   items: [
     "Bạn hãy đăng ký email để nhận bản tin sản phẩm và các chương trình khuyến mãi của chúng tôi.",
   ],
@@ -200,7 +200,7 @@ const Footer = () => {
               <img src="/assets/svgs/footer/call.svg" alt="call" />
               <Typography ml={1} sx={itemStyle}>
                 <a style={itemStyle} href="tel:0813626248">
-                  0813626248
+                  0333734681
                 </a>
               </Typography>
             </Button>
@@ -217,14 +217,14 @@ const Footer = () => {
             }}
           >
             <Link
-              to="https://www.facebook.com/phamxuanhuy3005/"
+              to="https://www.facebook.com/profile.php?id=100025450772663&mibextid=LQQJ4d"
               target="_blank"
               rel="noopener noreferrer"
             >
               <img src="/assets/svgs/footer/facebook.svg" alt="facebook" />
             </Link>
             <Link
-              to="https://www.facebook.com/phamxuanhuy3005/"
+              to="https://www.facebook.com/profile.php?id=100025450772663&mibextid=LQQJ4d"
               target="_blank"
               rel="noopener noreferrer"
             >

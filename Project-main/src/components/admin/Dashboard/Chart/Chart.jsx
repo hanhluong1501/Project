@@ -64,7 +64,7 @@ export default function Chart({ orders }) {
             <Label
               angle={270}
               position="left"
-              offset={15}
+              offset={13}
               style={{
                 textAnchor: "middle",
                 fill: theme.palette.text.primary,

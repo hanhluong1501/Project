@@ -95,7 +95,7 @@ export default function Login() {
             sm={4}
             md={7}
             sx={{
-              backgroundImage: "url(/assets/images/login.webp)",
+              backgroundImage: "url(https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/473813MyM/beauty-garden-551110.jpg)",
               backgroundRepeat: "no-repeat",
               backgroundColor: (t) =>
                 t.palette.mode === "light"

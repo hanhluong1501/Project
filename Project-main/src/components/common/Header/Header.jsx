@@ -125,7 +125,7 @@ const Header = () => {
                 />
               </Link>
               <Link to="/">
-                <img src="/assets/svgs/header/beautya.svg" alt="beautya" />
+                <img src="/assets/svgs/header/beautya.svg" alt="beauty garden" />
               </Link>
             </Box>
 

@@ -15,7 +15,7 @@ const BlurredBackgroundPaper = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   mb: 5,
   position: "relative",
-  backgroundImage: `url('/assets/images/login.webp')`, // Replace with your image path
+  backgroundImage: `url('https://mona.media/wp-content/uploads/2021/06/sale-my-pham.png')`, // Replace with your image path
   backgroundSize: "cover",
   backgroundPosition: "center",
   filter: "blur(0.5px)", // Adjust the blur effect
@@ -43,9 +43,9 @@ const brandInfo = {
   story:
     "Tại một ngôi làng xinh đẹp, nơi thiên nhiên hòa quyện với vẻ đẹp của cuộc sống hàng ngày, có một khu vườn kỳ diệu mang tên Beauty Garden Đây không chỉ là một khu vườn bình thường, mà là một nơi mà những loại cây cỏ quý hiếm và thảo dược độc quyền được chăm sóc và bảo vệ để tạo ra những sản phẩm làm đẹp tuyệt vời. Câu chuyện bắt đầu khi Emma, một nhà thảo dược học đam mê làm đẹp và chăm sóc sức khỏe, phát hiện ra khu vườn cổ xưa này trong một chuyến đi khám phá. Khu vườn này từng là nơi bí mật của một gia đình hoàng gia, nổi tiếng với những phương pháp làm đẹp truyền thống được lưu truyền qua nhiều thế hệ. Emma quyết định phục hồi khu vườn và mang lại sự tinh túy của nó cho thế giới hiện đại.Beauty Garden ra đời với sứ mệnh mang lại cho mọi người những sản phẩm làm đẹp tự nhiên và an toàn nhất, kết hợp giữa sự tinh túy của thiên nhiên và công nghệ hiện đại. Từ những loại mặt nạ dưỡng da đến các sản phẩm chăm sóc tóc, tất cả đều được chiết xuất từ các thảo dược quý giá và được tạo ra với sự tôn trọng đối với môi trường.Beauty Garden không chỉ là một thương hiệu mỹ phẩm, mà là một cộng đồng đam mê làm đẹp một cách bền vững và tự nhiên. Chúng tôi tin rằng mỗi sản phẩm không chỉ làm đẹp cho ngoại hình mà còn mang lại cảm giác thư giãn và hạnh phúc. Chúng tôi cam kết sử dụng các nguyên liệu thân thiện với môi trường và thực hiện quy trình sản xuất bền vững. Với tầm nhìn dài hạn, Beauty Garden hướng tới việc mở rộng ảnh hưởng toàn cầu, đồng thời duy trì cam kết về chất lượng và bền vững. Chúng tôi mong muốn tạo ra nhiều cơ hội cho cộng đồng yêu thích làm đẹp tự nhiên và tiếp tục khám phá những bí mật kỳ diệu của khu vườn cổ xưa.",
   brandImages: [
-    "/assets/images/homepage/hero-1.webp",
+    "https://camnangphaidep.vn/wp-content/uploads/2021/01/image-skincare-6.jpg",
     "/assets/images/homepage/hero-2.webp",
-    "/assets/images/homepage/hero-3.webp",
+    "https://biquyetkhoedep.net/wp-content/uploads/2020/09/luu-y-khi-chon-kem-duong-da.png",
   ],
 };
 
