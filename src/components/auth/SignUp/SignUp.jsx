@@ -84,7 +84,7 @@ export default function SignUp() {
       setToastOpen(true);
     } catch (error) {
       setLoading(false);
-      setToastMessage(error.message);
+      setToastMessage("Sign up failed!");
       setToastSeverity("error");
       setToastOpen(true);
     }
