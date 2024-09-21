@@ -72,7 +72,7 @@ const SkinAnalyzer = () => {
       const skinAnalysisResult = response.data;
       setAnalysisResult(skinAnalysisResult);
     } catch (error) {
-      showErrorToast(error.response.data.error_message);
+      showErrorToast("Upload image incorrect");
     } finally {
       setLoading(false);
     }
