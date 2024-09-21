@@ -51,7 +51,7 @@ const SkinAnalyzer = () => {
         // Cập nhật trạng thái local với URL avatar mới
         setSelectedImage(newUrl);
       } catch (error) {
-        showErrorToast(error.message);
+        showErrorToast("Upload image incorrect");
       } finally {
         setLoading(false);
       }
